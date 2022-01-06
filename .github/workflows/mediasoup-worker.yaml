@@ -8,27 +8,27 @@ jobs:
       fail-fast: false
       matrix:
         build:
-          - os: ubuntu-18.04
-            cc: gcc
-            cxx: g++
-          - os: ubuntu-18.04
-            cc: clang
-            cxx: clang++
-          - os: ubuntu-20.04
-            cc: gcc
-            cxx: g++
-          - os: ubuntu-20.04
-            cc: clang
-            cxx: clang++
-          - os: macos-10.15
-            cc: gcc
-            cxx: g++
-          - os: macos-10.15
-            cc: clang
-            cxx: clang++
-          - os: macos-11
-            cc: gcc
-            cxx: g++
+          # - os: ubuntu-18.04
+          #   cc: gcc
+          #   cxx: g++
+          # - os: ubuntu-18.04
+          #   cc: clang
+          #   cxx: clang++
+          # - os: ubuntu-20.04
+          #   cc: gcc
+          #   cxx: g++
+          # - os: ubuntu-20.04
+          #   cc: clang
+          #   cxx: clang++
+          # - os: macos-10.15
+          #   cc: gcc
+          #   cxx: g++
+          # - os: macos-10.15
+          #   cc: clang
+          #   cxx: clang++
+          # - os: macos-11
+          #   cc: gcc
+          #   cxx: g++
           - os: macos-11
             cc: clang
             cxx: clang++
@@ -37,7 +37,7 @@ jobs:
             cxx: cl
         # A single Node.js version should be fine for C++.
         node:
-          - 14
+          - 16
 
     runs-on: ${{ matrix.build.os }}
 
@@ -71,5 +71,12 @@ jobs:
             ${{ matrix.build.os }}-node-${{matrix.build.cc}}-
 
       - run: npm run worker:build
-      - run: npm run test:worker
-        if: runner.os != 'Windows'
+    
+      - uses: actions/upload-artifact@v2
+        name: Release artifact
+        with:
+          name: mediasoup-worker-${{ matrix.build.os }}
+          path: worker/out/Release
+
+      # - run: npm run test:worker
+      #   if: runner.os != 'Windows'
